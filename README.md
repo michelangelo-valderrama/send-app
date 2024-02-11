@@ -1,6 +1,6 @@
 # Send App
 
-App móbil para enviar newsletters a los suscriptores de mi blog <https://imangelo.dev>.
+App móvil para enviar newsletters a los suscriptores de mi blog <https://imangelo.dev>.
 
 ```sh
 # v20
