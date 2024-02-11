@@ -6,7 +6,6 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
 import { PaperPlaneIcon } from "@radix-ui/react-icons"
-import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
