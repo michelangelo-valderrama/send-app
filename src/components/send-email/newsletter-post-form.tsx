@@ -7,11 +7,12 @@ import { Button } from "../ui/button"
 import { PaperPlaneIcon } from "@radix-ui/react-icons"
 import { useToast } from "@/components/ui/use-toast"
 import { Textarea } from "../ui/textarea"
+import { sendEmail } from "@/services/send-email.service"
 
 const formSchema = z.object({
   title: z.string().min(2).max(40),
   preview: z.string().min(2).max(100),
-  message: z.string().min(2),
+  text: z.string().min(2),
   post_title: z.string(),
   post_description: z.string(),
   post_link: z.string(),
@@ -25,19 +26,37 @@ export function SendNewsletterPostForm({ title = "", description = "", link = ""
     defaultValues: {
       title: "",
       preview: "",
-      message: "",
+      text: "",
       post_title: title,
       post_description: description,
       post_link: link
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    form.reset()
-    toast({
-      description: "Email sent successfully",
-    })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await sendEmail({
+        title: values.title,
+        preview: values.preview,
+        text: values.text,
+        post: {
+          title: values.post_title,
+          description: values.post_description,
+          link: values.post_link
+        }
+      })
+      form.reset()
+      toast({
+        description: "Email sent successfully",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Error",
+        description: (error as any).message ?? "Internal Server Error",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
@@ -75,7 +94,7 @@ export function SendNewsletterPostForm({ title = "", description = "", link = ""
         />
         <FormField
           control={form.control}
-          name="message"
+          name="text"
           render={({ field }) => (
             <FormItem>
               <FormControl>

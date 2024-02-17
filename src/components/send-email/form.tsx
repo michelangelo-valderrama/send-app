@@ -7,11 +7,12 @@ import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
 import { PaperPlaneIcon } from "@radix-ui/react-icons"
 import { useToast } from "@/components/ui/use-toast"
+import { sendEmail } from "@/services/send-email.service"
 
 const formSchema = z.object({
   title: z.string().min(2).max(40),
   preview: z.string().min(2).max(100),
-  message: z.string().min(2),
+  text: z.string().min(2),
 })
 
 export function SendEmailForm() {
@@ -22,16 +23,25 @@ export function SendEmailForm() {
     defaultValues: {
       title: "",
       preview: "",
-      message: ""
+      text: ""
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    form.reset()
-    toast({
-      description: "Email sent successfully",
-    })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await sendEmail(values)
+      form.reset()
+      toast({
+        description: "Email sent successfully",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Error",
+        description: (error as any).message ?? "Internal Server Error",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
@@ -69,7 +79,7 @@ export function SendEmailForm() {
         />
         <FormField
           control={form.control}
-          name="message"
+          name="text"
           render={({ field }) => (
             <FormItem>
               <FormControl>

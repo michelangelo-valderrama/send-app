@@ -6,6 +6,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { PaperPlaneIcon } from "@radix-ui/react-icons"
 import { useToast } from "@/components/ui/use-toast"
+import { sendEmail } from "@/services/send-email.service"
 
 const formSchema = z.object({
   title: z.string(),
@@ -25,12 +26,21 @@ export function SendPostForm({ title = "", description = "", link = "" }: any) {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    form.reset()
-    toast({
-      description: "Email sent successfully",
-    })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await sendEmail(values)
+      form.reset()
+      toast({
+        description: "Email sent successfully",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Error",
+        description: (error as any).message ?? "Internal Server Error",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
