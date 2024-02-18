@@ -6,6 +6,7 @@
   "scripts": {
     "start": "vite",
     "start:android": "npm run build && cap copy android && cap open android",
+    "load:res": "capacitor-assets generate",
     "dev": "vite",
     "dev:host": "vite --host",
     "build": "tsc && vite build",
@@ -37,6 +38,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.4",
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
